@@ -3409,11 +3409,9 @@ export class ManagerModal extends Modal {
                         itemEl.settingEl.addEventListener(
                             "click",
                             function (event) {
-                                const excludedButtons = Array.from(
-                                    itemEl.controlEl.querySelectorAll("div")
-                                );
-                                if (event.target instanceof HTMLDivElement && excludedButtons.includes(event.target)) {
-                                    event.stopPropagation();
+                                // Only exclude clicks on the actual control container, not all divs
+                                const target = event.target as HTMLElement;
+                                if (target.closest(".manager-item__control") || target.closest(".setting-item-control")) {
                                     return;
                                 }
                                 if (
