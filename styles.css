@@ -707,9 +707,12 @@ body.theme-dark {
     background-color: var(--background-modifier-hover);
 }
 
+/* Disabled plugin items - keep interactive but visually faded */
 .manager-item.inactive {
     opacity: var(--item-inactive);
     filter: none;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 /* 目录项 名称行*/
@@ -5715,9 +5718,12 @@ body.theme-dark {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
+/* Disabled plugin items in card view - keep interactive but visually faded */
 .manager-container .manager-item.inactive {
     opacity: var(--item-inactive);
     filter: none;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 .manager-container .manager-plugin-card {
@@ -6610,6 +6616,8 @@ body.theme-dark {
 
 .manager-hidden-card.inactive {
     opacity: var(--item-inactive);
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 .manager-hidden-card__drag {

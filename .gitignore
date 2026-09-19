@@ -1,29 +1,70 @@
-# vscode
-.vscode 
+```gitignore
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
 
-# Intellij
-*.iml
-.idea
+# Dependencies
+node_modules/
+venv/
+.venv/
+.env
+.env.local
+.env.*
 
-# npm
-node_modules
+# Build directories
+dist/
+build/
+target/
 
-# 不要将编译后的 `main.js` 文件放入代码库中。应该将其上传到 GitHub 发布版中。
-main.js
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
 
-# Exclude sourcemaps
-*.map
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# obsidian
-data.json
-
-# 排除macOS Finder （System Explorer）视图状态
+# System files
 .DS_Store
+Thumbs.db
 
-# 无
-笔记.md
-repealed.ts
-i18n
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
 
-# 参考资料
-参考
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+```
