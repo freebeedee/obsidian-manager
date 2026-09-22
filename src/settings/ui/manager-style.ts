@@ -28,7 +28,6 @@ export default class ManagerBasis extends BaseSetting {
         'd': this.manager.translator.t('设置_基础设置_标签样式_选项_四')
     }
 
-
     private async saveAndRefreshManager() {
         await this.manager.saveSettings();
         await this.manager.managerModal?.refreshStyleSettings();
