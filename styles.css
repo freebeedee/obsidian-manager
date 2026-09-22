@@ -708,11 +708,23 @@ body.theme-dark {
 }
 
 /* Disabled plugin items - keep interactive but visually faded */
-.manager-item.inactive {
-    opacity: var(--item-inactive);
+.manager-item.bpm-fade-inactive {
+    opacity: 1;
     filter: none;
     pointer-events: auto;
     cursor: pointer;
+}
+
+/* Fade only the name and description containers, not the whole card */
+.manager-item.bpm-fade-inactive .manager-item__name-container,
+.manager-item.bpm-fade-inactive .manager-item__description-container {
+    opacity: var(--item-inactive);
+    transition: opacity 0.15s ease;
+}
+
+.manager-item.bpm-fade-inactive:hover .manager-item__name-container,
+.manager-item.bpm-fade-inactive:hover .manager-item__description-container {
+    opacity: calc(var(--item-inactive) * 1.5);
 }
 
 /* 目录项 名称行*/
@@ -5719,11 +5731,23 @@ body.theme-dark {
 }
 
 /* Disabled plugin items in card view - keep interactive but visually faded */
-.manager-container .manager-item.inactive {
-    opacity: var(--item-inactive);
+.manager-container .manager-item.bpm-fade-inactive {
+    opacity: 1;
     filter: none;
     pointer-events: auto;
     cursor: pointer;
+}
+
+/* Fade only the name and description containers, not the whole card */
+.manager-container .manager-item.bpm-fade-inactive .manager-item__name-container,
+.manager-container .manager-item.bpm-fade-inactive .manager-item__description-container {
+    opacity: var(--item-inactive);
+    transition: opacity 0.15s ease;
+}
+
+.manager-container .manager-item.bpm-fade-inactive:hover .manager-item__name-container,
+.manager-container .manager-item.bpm-fade-inactive:hover .manager-item__description-container {
+    opacity: calc(var(--item-inactive) * 1.5);
 }
 
 .manager-container .manager-plugin-card {
@@ -6614,10 +6638,20 @@ body.theme-dark {
     background: color-mix(in srgb, var(--bpm-muted) 44%, var(--bpm-card));
 }
 
-.manager-hidden-card.inactive {
-    opacity: var(--item-inactive);
+.manager-hidden-card.bpm-fade-inactive {
+    opacity: 1;
     pointer-events: auto;
     cursor: pointer;
+}
+
+/* Fade only the main content area, not the whole card */
+.manager-hidden-card.bpm-fade-inactive .manager-hidden-card__main {
+    opacity: var(--item-inactive);
+    transition: opacity 0.15s ease;
+}
+
+.manager-hidden-card.bpm-fade-inactive:hover .manager-hidden-card__main {
+    opacity: calc(var(--item-inactive) * 1.5);
 }
 
 .manager-hidden-card__drag {
