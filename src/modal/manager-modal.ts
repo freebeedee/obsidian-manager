@@ -1373,8 +1373,8 @@ export class ManagerModal extends Modal {
         card.toggleClass("is-bulk-selected", this.bulkSelectedPluginIds.has(pluginId));
         const bulkCheckbox = card.querySelector<HTMLInputElement>(".manager-plugin-card__bulk-select input[type='checkbox']");
         if (bulkCheckbox) bulkCheckbox.checked = this.bulkSelectedPluginIds.has(pluginId);
-        if (this.settings.FADE_OUT_DISABLED_PLUGINS) card.toggleClass("inactive", !isEnabled);
-        else card.removeClass("inactive");
+        if (this.settings.FADE_OUT_DISABLED_PLUGINS) card.toggleClass("bpm-fade-inactive", !isEnabled);
+        else card.removeClass("bpm-fade-inactive");
 
         if (statusChip) {
             statusChip.setText(isSelf
@@ -3376,7 +3376,7 @@ export class ManagerModal extends Modal {
             });
 
             // [淡化插件]
-            if (this.settings.FADE_OUT_DISABLED_PLUGINS && !isEnabled) itemEl.settingEl.addClass("inactive");
+            if (this.settings.FADE_OUT_DISABLED_PLUGINS && !isEnabled) itemEl.settingEl.addClass("bpm-fade-inactive");
 
             // [批量操作]
             this.displayPlugins.push(plugin);
@@ -3989,7 +3989,9 @@ export class ManagerModal extends Modal {
                             cardIcon.empty();
                             setIcon(cardIcon, targetEnabled ? "plug-zap" : "plug");
                             if (this.settings.FADE_OUT_DISABLED_PLUGINS) {
-                                itemEl.settingEl.toggleClass("inactive", !targetEnabled);
+                                itemEl.settingEl.toggleClass("bpm-fade-inactive", !targetEnabled);
+                            } else {
+                                itemEl.settingEl.removeClass("bpm-fade-inactive");
                             }
                             // 同步“打开设置”按钮（启用后出现，禁用后隐藏）
                             if (openPluginSetting) {
@@ -5606,7 +5608,7 @@ export class ManagerModal extends Modal {
             card.addClass("manager-layout-editable-card");
             bindDragHandle(card, index, managerPlugin.name);
             card.toggleClass("is-hidden", isHidden);
-            if (this.settings.FADE_OUT_DISABLED_PLUGINS && !isEnabled) card.addClass("inactive");
+            if (this.settings.FADE_OUT_DISABLED_PLUGINS && !isEnabled) card.addClass("bpm-fade-inactive");
 
             const main = card.createDiv("manager-hidden-card__main");
             const iconWrap = main.createDiv("manager-hidden-card__icon");
