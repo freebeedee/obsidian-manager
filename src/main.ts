@@ -1,7 +1,7 @@
 import { normalizePath, ObsidianProtocolData, Plugin, PluginManifest, Workspace } from 'obsidian';
 import { DEFAULT_SETTINGS, ManagerSettings, PluginUpdateCheckMode, ReleaseCompatibilityMode } from './settings/data';
 import { ManagerSettingTab } from './settings';
-import { Translator } from './lang/inxdex';
+import { Translator } from './lang/index';
 import { NoteTipFeature } from './note-tip';
 import { ManagerModal } from './modal/manager-modal';
 import Commands from './command';
@@ -80,6 +80,7 @@ export default class Manager extends Plugin {
     public systemRibbonManager?: SystemRibbonManager;
     public updateStatus: Record<string, UpdateStatus> = {};
     private updateProgressNotice: Notice | null = null;
+    private menuObserver: MutationObserver | null = null;
 
 
     // 拖拽隐藏功能相关状态
@@ -304,9 +305,6 @@ export default class Manager extends Plugin {
 
             // 如果 BPM 设置面板打开着，尝试刷新它
             this.reloadIfCurrentModal();
-
-            this.applyRibbonConfigToMemory(orderedIds, hiddenStatus);
-            this.updateRibbonStyles();
 
             new Notice(this.translator.t("Ribbon_已隐藏_通知", { name: label }));
         }
@@ -1453,8 +1451,6 @@ export default class Manager extends Plugin {
         }
         return lines.every((line) => label.includes(line));
     }
-
-    private menuObserver: MutationObserver | null = null;
 
     setupMenuObserver() {
         if (!this.isRibbonManagerEnabled() || this.menuObserver) return;
