@@ -382,6 +382,41 @@ export class ManagerModal extends Modal {
         return this.modalPageEl ?? this.contentEl;
     }
 
+    // [样式] 注入管理器卡片样式：淡化非活动项（仅视觉，不阻断交互）
+    private static readonly MANAGER_STYLES = `
+.manager-container .bpm-fade-inactive {
+    opacity: 0.45;
+    pointer-events: auto !important;
+}
+.manager-container .bpm-fade-inactive * {
+    pointer-events: auto !important;
+}
+.manager-container .bpm-fade-inactive:hover,
+.manager-container .bpm-fade-inactive:focus-within {
+    opacity: 1;
+}
+.manager-container .bpm-state-disabled {
+    user-select: text;
+}
+/* 防御性兜底：即使外部主题/旧缓存给整行加了核心 is-disabled，也保持可交互 */
+.manager-container .manager-plugin-card.is-disabled,
+.manager-container .manager-item.is-disabled,
+.manager-container .manager-hidden-card.is-disabled {
+    pointer-events: auto !important;
+    cursor: default;
+}
+`;
+
+    private ensureManagerStyles() {
+        const doc = this.contentEl.doc;
+        if (doc.getElementById("bpm-manager-styles")) return;
+        const styleEl = doc.createElement("style");
+        styleEl.id = "bpm-manager-styles";
+        styleEl.setAttribute("type", "text/css");
+        styleEl.setText(ManagerModal.MANAGER_STYLES);
+        doc.head.appendChild(styleEl);
+    }
+
     private nextRenderGeneration(): number {
         return ++this.renderGeneration;
     }
@@ -1366,7 +1401,9 @@ export class ManagerModal extends Modal {
         const statusChip = controller?.statusChip ?? card.querySelector<HTMLElement>(".manager-plugin-card__state");
         const cardIcon = controller?.cardIcon ?? card.querySelector<HTMLElement>(".manager-plugin-card__icon");
         card.toggleClass("is-enabled", isEnabled);
-        card.toggleClass("is-disabled", !isEnabled);
+        // 使用命名空间类，避免复用 Obsidian 核心 `.is-disabled`（会禁用整行交互）
+        card.toggleClass("bpm-state-disabled", !isEnabled);
+        card.removeClass("is-disabled");
         card.toggleClass("is-self", isSelf);
         card.toggleClass("is-bpm-ignored", managerPlugin.tags.includes(BPM_IGNORE_TAG));
         card.toggleClass("is-hidden-layout", this.isPluginHidden(pluginId));
@@ -3139,7 +3176,9 @@ export class ManagerModal extends Modal {
             itemEl.setClass("manager-item");
             itemEl.settingEl.addClass("manager-plugin-card");
             itemEl.settingEl.toggleClass("is-enabled", isEnabled);
-            itemEl.settingEl.toggleClass("is-disabled", !isEnabled);
+            // 使用命名空间类，避免复用 Obsidian 核心 `.is-disabled`（会禁用整行交互）
+            itemEl.settingEl.toggleClass("bpm-state-disabled", !isEnabled);
+            itemEl.settingEl.removeClass("is-disabled");
             itemEl.settingEl.toggleClass("is-self", isSelf);
             itemEl.settingEl.toggleClass("has-update", Boolean(currentUpdateInfo?.hasUpdate));
             itemEl.settingEl.toggleClass("has-update-problem", Boolean(updateProblem));
@@ -3982,7 +4021,8 @@ export class ManagerModal extends Modal {
                         const removeByFilter = !this.matchesStatusFilter(ManagerPlugin, plugin, targetEnabled, statusFilter, statusOperator, hiddenPluginIds);
                         const updateCardUI = () => {
                             itemEl.settingEl.toggleClass("is-enabled", targetEnabled);
-                            itemEl.settingEl.toggleClass("is-disabled", !targetEnabled);
+                            itemEl.settingEl.toggleClass("bpm-state-disabled", !targetEnabled);
+                            itemEl.settingEl.removeClass("is-disabled");
                             statusChip.setText(targetEnabled ? this.manager.translator.t("管理器_状态_启用中") : this.manager.translator.t("管理器_状态_已禁用"));
                             statusChip.removeClass(targetEnabled ? "is-disabled" : "is-enabled");
                             statusChip.addClass(targetEnabled ? "is-enabled" : "is-disabled");
@@ -5608,7 +5648,8 @@ export class ManagerModal extends Modal {
             card.addClass("manager-layout-editable-card");
             bindDragHandle(card, index, managerPlugin.name);
             card.toggleClass("is-hidden", isHidden);
-            if (this.settings.FADE_OUT_DISABLED_PLUGINS && !isEnabled) card.addClass("bpm-fade-inactive");
+            if (this.settings.FADE_OUT_DISABLED_PLUGINS) card.toggleClass("bpm-fade-inactive", !isEnabled);
+            else card.removeClass("bpm-fade-inactive");
 
             const main = card.createDiv("manager-hidden-card__main");
             const iconWrap = main.createDiv("manager-hidden-card__icon");
@@ -7932,6 +7973,7 @@ export class ManagerModal extends Modal {
     }
 
     private async openAsync() {
+        this.ensureManagerStyles();
         await this.showHead();
         await this.showData();
         this.searchEl.inputEl.focus();
